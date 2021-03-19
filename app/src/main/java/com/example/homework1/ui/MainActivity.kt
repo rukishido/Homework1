@@ -1,12 +1,12 @@
 package com.example.homework1.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.homework1.R
 import com.example.homework1.databinding.ActivityMainBinding
 import com.example.homework1.extensions.onEnterPressed
+import com.example.homework1.extensions.showErrorMessage
 import com.example.homework1.ui.common.InputState
 import data.Student
 
@@ -63,33 +63,21 @@ class MainActivity : AppCompatActivity() {
     private fun showValidationError(validationResult: MainViewModel.ValidationResult) {
         when (validationResult) {
             MainViewModel.ValidationResult.NAME -> {
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.mainScreen_nameValidationError),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorMessage(R.string.mainScreen_nameValidationError)
             }
             MainViewModel.ValidationResult.SURNAME -> {
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.mainScreen_surnameValidationError),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorMessage(R.string.mainScreen_surnameValidationError)
             }
             MainViewModel.ValidationResult.GRADE -> {
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.mainScreen_gradeValidationError),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorMessage(R.string.mainScreen_gradeValidationError)
             }
             MainViewModel.ValidationResult.YEAR -> {
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.mainScreen_birthdateYearValidationError),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorMessage(R.string.mainScreen_birthdateYearValidationError)
             }
+            MainViewModel.ValidationResult.MISSING_FIELDS -> {
+                showErrorMessage(R.string.mainScreen_fieldCountValidationError)
+            }
+            else -> throw error("Unexpected ValidationResult state")
         }
     }
 
