@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Homework1</string>
+    <string name="mainScreen_fieldCountValidationError">Input error! Check if you filled all required fields!</string>
+    <string name="mainScreen_nameValidationError">Input error in name field!</string>
+    <string name="mainScreen_surnameValidationError">Input error in surname field!</string>
+    <string name="mainScreen_gradeValidationError">Input error in grade field!</string>
+    <string name="mainScreen_birthdateYearValidationError">Input error in birth date year field!</string>
+
+    <string name="mainScreen_showButton_text">Show</string>
+    <string name="mainScreen_inputField_hint">Name Surname Grade BirthDayYear</string>
 </resources>

@@ -1,34 +1,43 @@
 package com.example.homework1.ui
 
+
 import androidx.lifecycle.ViewModel
+import com.example.homework1.R
+import com.example.homework1.ui.common.InputState
 import data.Student
-import java.lang.IllegalArgumentException
 import java.util.*
 
 class MainViewModel : ViewModel() {
-    val students = mutableMapOf<Long, Student>()
+    private val _students = mutableMapOf<Long, Student>()
+    val students: Map<Long, Student> = _students
 
-    @Throws(IllegalArgumentException::class)
-    fun getStudentFromString(studentInfo: String): Student {
+    fun getStudentFromString(studentInfo: String): InputState {
         val studentFields = studentInfo.split("\\s+".toRegex())
-        if (studentFields.size == 4 && isStudentFieldsValid(studentFields)) {
-            return Student(
-                id = System.currentTimeMillis(),
-                name = studentFields[0],
-                surname = studentFields[1],
-                grade = studentFields[2],
-                birthDateYear = studentFields[3]
+        val validationResult = isStudentFieldsValid(studentFields)
+        return if (validationResult == ValidationResult.ALL_VALID) {
+            InputState.Data(
+                Student(
+                    id = System.currentTimeMillis(),
+                    name = studentFields[0],
+                    surname = studentFields[1],
+                    grade = studentFields[2],
+                    birthDateYear = studentFields[3]
+                )
             )
         } else {
-            throw IllegalArgumentException()
+            InputState.Error(validationResult)
         }
     }
 
-    private fun isStudentFieldsValid(fields: List<String>): Boolean {
-        return fields[0].matches("[a-zA-Z]{3,}".toRegex()) && //Name
-                fields[1].matches("[a-zA-Z]{3,}".toRegex()) && //Surname
-                validateGrade(fields[2]) && //Grade
-                validateYear(fields[3]) // Year
+    private fun isStudentFieldsValid(fields: List<String>): ValidationResult {
+        return when {
+            fields.size != 4 -> ValidationResult.MISSING_FIELDS
+            !fields[0].matches("[a-zA-Z]{3,}".toRegex()) -> ValidationResult.NAME
+            !fields[1].matches("[a-zA-Z]{3,}".toRegex()) -> ValidationResult.SURNAME
+            !validateGrade(fields[2]) -> ValidationResult.GRADE
+            !validateYear(fields[3]) -> ValidationResult.YEAR
+            else -> ValidationResult.ALL_VALID
+        }
     }
 
     private fun validateYear(yearString: String): Boolean {
@@ -39,5 +48,21 @@ class MainViewModel : ViewModel() {
     private fun validateGrade(gradeString: String): Boolean {
         return gradeString.matches("[1]?[0-9]\\D".toRegex()) &&
                 gradeString.replace("\\D".toRegex(), "").toInt() in 1..11
+    }
+
+    fun addStudentRecord(student: Student) {
+        _students.put(
+            System.currentTimeMillis(),
+            student
+        )
+    }
+
+    enum class ValidationResult {
+        MISSING_FIELDS,
+        NAME,
+        SURNAME,
+        GRADE,
+        YEAR,
+        ALL_VALID
     }
 }
